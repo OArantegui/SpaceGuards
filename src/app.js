@@ -2,6 +2,7 @@ import { loadSatelliteData } from './services/dataService.js';
 import * as globeView from './components/globeView.js';
 import * as filterPanel from './components/filterPanel.js';
 import * as dashboard from './components/dashboard.js';
+import * as chatbot from './components/chatbot.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- ESTADO DE LA APLICACIÓN ---
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 4. Inicializar componentes de UI
             filterPanel.initFilterPanel(handleFilterChange, handleSatelliteSelect);
             dashboard.initDashboard(handleMissionStart, handleCloseDashboard);
+            chatbot.initChatbot(satellites, handleSatelliteSelect, handleFilterChange, egoStation, world); // Inicializar chatbot con datos completos
 
             // 5. Configurar interacciones y animación
             globeView.setupInteractions(satellites, handleSatelliteSelect);

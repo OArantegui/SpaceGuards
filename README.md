@@ -1,6 +1,41 @@
-# 🛰️ SpaceGuard - Visualizador de Objetos Espaciales
+# 🛰️ SpaceGuard - Visualizador de Desechos Espaciales (EGO)
 
-Sistema de visualización 3D de satélites y basura espacial usando datos en tiempo real desde Firebase Realtime Database.
+Aplicación web 3D para visualización y análisis de satélites y basura espacial en órbita terrestre.
+
+## 🚀 Instalación y Ejecución
+
+### ⚠️ IMPORTANTE: NO abrir `index.html` directamente
+
+Esta aplicación usa módulos ES6 y requiere un servidor HTTP. **NO funcionará** si abres el archivo `index.html` directamente en el navegador.
+
+### Método 1: Servidor Python (Recomendado)
+
+```bash
+# Navega a la carpeta del proyecto
+cd SpaceGuards
+
+# Ejecuta el servidor incluido
+python server.py
+
+# O alternativamente:
+python -m http.server 8000
+```
+
+Luego abre en tu navegador: **http://localhost:8000**
+
+### Método 2: Node.js (Alternativa)
+
+```bash
+# Si tienes Node.js instalado
+npx http-server -p 8000
+```
+
+Luego abre en tu navegador: **http://localhost:8000**
+
+### Método 3: Visual Studio Code (Live Server)
+
+1. Instala la extensión "Live Server" en VS Code
+2. Click derecho en `index.html` → "Open with Live Server"
 
 ## 🚀 Características
 

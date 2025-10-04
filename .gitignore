@@ -42,6 +42,9 @@ yarn-error.log*
 .env.local
 .env.*.local
 
+# API Configuration (contiene credenciales sensibles)
+src/config/apiConfig.js
+
 # Temporary files
 *.tmp
 *.temp
