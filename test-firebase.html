@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Firebase Connection</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+</head>
+<body>
+    <h1>Test de Conexión Firebase</h1>
+    <div id="output"></div>
+    
+    <script>
+        const firebaseConfig = {
+            databaseURL: "https://spaceguard-b46ef-default-rtdb.firebaseio.com/"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const output = document.getElementById('output');
+        
+        async function testConnection() {
+            output.innerHTML = '<p>🔄 Conectando a Firebase...</p>';
+            
+            try {
+                // Probar con la categoría 'debris'
+                const snapshot = await database.ref('debris').limitToFirst(5).once('value');
+                const data = snapshot.val();
+                
+                if (data) {
+                    output.innerHTML += '<p>✅ Conexión exitosa!</p>';
+                    output.innerHTML += '<h2>Primeros 5 objetos de "debris":</h2>';
+                    
+                    Object.keys(data).forEach(key => {
+                        const obj = data[key];
+                        output.innerHTML += `
+                            <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+                                <strong>ID:</strong> ${key}<br>
+                                <strong>Nombre:</strong> ${obj.OBJECT_NAME || 'N/A'}<br>
+                                <strong>NORAD:</strong> ${obj.NORAD_CAT_ID || 'N/A'}<br>
+                                <strong>Mean Motion:</strong> ${obj.MEAN_MOTION || 'N/A'}<br>
+                                <strong>Inclination:</strong> ${obj.INCLINATION || 'N/A'}<br>
+                            </div>
+                        `;
+                    });
+                } else {
+                    output.innerHTML += '<p>⚠️ No se encontraron datos</p>';
+                }
+                
+            } catch (error) {
+                output.innerHTML += `<p>❌ Error: ${error.message}</p>`;
+                console.error('Error:', error);
+            }
+        }
+        
+        testConnection();
+    </script>
+</body>
+</html>

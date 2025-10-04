@@ -1,0 +1,887 @@
+/* ================================================================
+   PALETA DE COLORES NASA PROFESIONAL
+   ================================================================
+   - Azul NASA Oscuro: #0B3D91
+   - Azul NASA Claro: #1E5A96
+   - Rojo NASA: #FC3D21
+   - Blanco: #FFFFFF
+   - Gris Espacial Oscuro: #1a1a2e
+   - Gris Espacial Medio: #16213e
+   - Cyan Brillante: #00d4ff
+   - Dorado: #ffd700
+   ================================================================ */
+
+/* BASE & RESPONSIVE FIXES */
+html, body { 
+    margin: 0; 
+    padding: 0; 
+    height: 100%; 
+    width: 100%;
+    overflow: hidden; 
+    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #000000;
+}
+
+#globeViz {
+    width: 100vw; 
+    height: 100vh;
+    background: radial-gradient(ellipse at center, #0a0a1a 0%, #000000 100%);
+}
+
+/* ------------------------------------------------------------------ */
+/* ESTILOS DE PANELES */
+/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ */
+/* ANIMACIONES GLOBALES */
+/* ------------------------------------------------------------------ */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(0, 212, 255, 0.6); }
+}
+
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+    50% { text-shadow: 0 0 20px rgba(0, 212, 255, 0.8); }
+}
+
+/* ------------------------------------------------------------------ */
+/* POPUP DE MISIÓN */
+/* ------------------------------------------------------------------ */
+#mission-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 380px;
+    background: linear-gradient(135deg, #0B3D91 0%, #16213e 100%);
+    color: #FFFFFF;
+    padding: 25px;
+    border-radius: 16px;
+    z-index: 20;
+    display: none;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9), 
+                0 0 40px rgba(0, 212, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 2px solid #00d4ff;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    animation: fadeIn 0.3s ease-out;
+    backdrop-filter: blur(10px);
+}
+
+#mission-popup h3 {
+    color: #00d4ff;
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(0, 212, 255, 0.4);
+    padding-bottom: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    animation: glow 2s ease-in-out infinite;
+}
+
+#mission-popup .mission-info p {
+    margin: 12px 0;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+#mission-popup .mission-info strong {
+    color: #00d4ff;
+    font-weight: 600;
+}
+
+#mission-popup hr {
+    border: none;
+    border-top: 1px solid rgba(0, 212, 255, 0.3);
+    margin: 15px 0;
+}
+
+#mission-popup button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 15px;
+    background: linear-gradient(135deg, #FC3D21 0%, #d32f2f 100%);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(252, 61, 33, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#mission-popup button:hover {
+    background: linear-gradient(135deg, #ff5722 0%, #FC3D21 100%);
+    box-shadow: 0 6px 25px rgba(252, 61, 33, 0.5);
+    transform: translateY(-2px);
+}
+
+#mission-popup button:active {
+    transform: translateY(0);
+}
+
+/* ------------------------------------------------------------------ */
+/* DASHBOARD (PANEL DERECHO) */
+/* ------------------------------------------------------------------ */
+#dashboard {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 360px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: linear-gradient(135deg, #0B3D91 0%, #1a1a2e 100%);
+    color: #FFFFFF;
+    padding: 25px;
+    border-radius: 16px;
+    display: none;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    z-index: 10;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9), 
+                0 0 40px rgba(0, 212, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 2px solid #00d4ff;
+    animation: slideInRight 0.4s ease-out;
+    backdrop-filter: blur(10px);
+}
+
+/* Scrollbar personalizada para el dashboard */
+#dashboard::-webkit-scrollbar {
+    width: 8px;
+}
+
+#dashboard::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+#dashboard::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00d4ff 0%, #0B3D91 100%);
+    border-radius: 10px;
+}
+
+#dashboard::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #00d4ff 0%, #1E5A96 100%);
+}
+
+/* ------------------------------------------------------------------ */
+/* PANEL DE FILTROS (IZQUIERDA) */
+/* ------------------------------------------------------------------ */
+#filter-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 280px;
+    height: calc(100vh - 40px);
+    background: linear-gradient(135deg, #0B3D91 0%, #1a1a2e 100%);
+    color: #FFFFFF;
+    padding: 20px;
+    border-radius: 16px;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    z-index: 10;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9), 
+                0 0 40px rgba(0, 212, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 2px solid #00d4ff;
+    display: flex;
+    flex-direction: column;
+    animation: slideInLeft 0.4s ease-out;
+    backdrop-filter: blur(10px);
+}
+
+/* Scrollbar personalizada para el panel de filtros */
+#filter-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+#filter-panel::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+#filter-panel::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00d4ff 0%, #0B3D91 100%);
+    border-radius: 10px;
+}
+
+#filter-panel::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #00d4ff 0%, #1E5A96 100%);
+}
+
+
+
+/* ------------------------------------------------------------------ */
+/* ESTILOS ESPECÍFICOS DE FILTROS Y CONTROLES */
+/* ------------------------------------------------------------------ */
+
+#filter-panel h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #00d4ff;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(0, 212, 255, 0.4);
+    padding-bottom: 10px;
+    animation: glow 2s ease-in-out infinite;
+}
+
+#filter-panel h4 {
+    color: #00d4ff;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+    padding-bottom: 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Contenedor de cada campo de filtro */
+#filter-panel > div {
+    margin-bottom: 15px;
+}
+
+#filter-panel label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #FFFFFF;
+    letter-spacing: 0.3px;
+}
+
+#filter-panel input[type="number"], 
+#filter-panel select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    background: rgba(22, 33, 62, 0.6);
+    color: #FFFFFF;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+#filter-panel input[type="number"]:focus, 
+#filter-panel select:focus {
+    outline: none;
+    border-color: #00d4ff;
+    background: rgba(22, 33, 62, 0.8);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3),
+                inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#filter-panel input[type="number"]:hover, 
+#filter-panel select:hover {
+    border-color: #00d4ff;
+}
+
+/* Contenedor de Botones de Filtro */
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.filter-buttons button {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#apply-filters-button {
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+}
+
+#apply-filters-button:hover {
+    background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    transform: translateY(-2px);
+}
+
+#apply-filters-button:active {
+    transform: translateY(0);
+}
+
+#reset-filters-button { 
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+}
+
+#reset-filters-button:hover {
+    background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+    transform: translateY(-2px);
+}
+
+#reset-filters-button:active {
+    transform: translateY(0);
+}
+
+/* Contenedor de Resultados Deslizable */
+#results-list {
+    flex-grow: 1;
+    margin-top: 15px;
+    overflow-y: auto; 
+    padding-right: 8px;
+}
+
+/* Scrollbar para lista de resultados */
+#results-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#results-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+#results-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00d4ff 0%, #0B3D91 100%);
+    border-radius: 10px;
+}
+
+/* Estilos de las cajas de resultados */
+.result-box {
+    background: rgba(22, 33, 62, 0.5);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.result-box:hover {
+    background: rgba(22, 33, 62, 0.8);
+    border-left: 4px solid #00d4ff;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+    transform: translateX(4px);
+}
+
+.result-box.selected {
+    border-left: 4px solid #FC3D21;
+    background: rgba(22, 33, 62, 0.9);
+    box-shadow: 0 4px 15px rgba(252, 61, 33, 0.4);
+}
+
+.result-box p {
+    margin: 4px 0;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.result-box strong {
+    color: #00d4ff;
+    font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ */
+/* ESTILOS DE DASHBOARD (DERECHA) */
+/* ------------------------------------------------------------------ */
+
+#dashboard h3 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    color: #00d4ff;
+    border-bottom: 2px solid rgba(0, 212, 255, 0.4);
+    padding-bottom: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    animation: glow 2s ease-in-out infinite;
+}
+
+#dashboard h4 {
+    margin: 15px 0 10px 0;
+    font-size: 16px;
+    color: #00d4ff;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+    padding-bottom: 8px;
+    font-weight: 600;
+}
+
+#dashboard hr {
+    border: none;
+    border-top: 1px solid rgba(0, 212, 255, 0.3);
+    margin: 20px 0;
+}
+
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 14px;
+    padding: 10px 14px;
+    background: rgba(22, 33, 62, 0.4);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    gap: 12px;
+}
+
+.data-row:hover {
+    background: rgba(22, 33, 62, 0.6);
+    transform: translateX(2px);
+}
+
+.data-row strong {
+    color: #00d4ff;
+    font-weight: 600;
+    flex-shrink: 0;
+    min-width: fit-content;
+}
+
+.data-row span {
+    color: #FFFFFF;
+    font-weight: 500;
+    text-align: right;
+    word-break: break-word;
+}
+
+#status-indicator {
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+}
+/* Barras de Métricas Visuales */
+.metrics-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 15px 0;
+}
+
+.metric-bar-container {
+    background: rgba(22, 33, 62, 0.4);
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.metric-bar-container:hover {
+    background: rgba(22, 33, 62, 0.6);
+    border-color: rgba(0, 212, 255, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.metric-label {
+    font-size: 13px;
+    color: #00d4ff;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.metric-value {
+    font-size: 18px;
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+.metric-bar-bg {
+    width: 100%;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.metric-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00d4ff 0%, #0B3D91 100%);
+    border-radius: 12px;
+    transition: width 0.6s ease, background 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+/* Contenedores de Gráficos */
+.chart-container {
+    width: 100%; 
+    position: relative;
+    text-align: center;
+    background: rgba(22, 33, 62, 0.4);
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    transition: all 0.3s ease;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.chart-container canvas {
+    max-width: 100%;
+    height: auto !important;
+}
+
+.chart-container:hover {
+    background: rgba(22, 33, 62, 0.6);
+    border-color: rgba(0, 212, 255, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+}
+
+.chart-title {
+    font-size: 12px;
+    color: #00d4ff;
+    margin-bottom: 8px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    width: 100%;
+}
+
+/* Estilos de listas en el dashboard */
+#dashboard ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 10px 0;
+}
+
+#dashboard ul li {
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    background: rgba(22, 33, 62, 0.4);
+    border-radius: 8px;
+    border-left: 3px solid #00d4ff;
+    transition: all 0.3s ease;
+}
+
+#dashboard ul li:hover {
+    background: rgba(22, 33, 62, 0.6);
+    transform: translateX(4px);
+}
+
+/* Botones del Dashboard */
+#mission-button, 
+#close-dashboard,
+#pdf-button {
+    margin-top: 12px;
+    width: 100%;
+    padding: 14px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#mission-button {
+    background: linear-gradient(135deg, #FC3D21 0%, #d32f2f 100%);
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+#mission-button:hover {
+    background: linear-gradient(135deg, #ff5722 0%, #FC3D21 100%);
+    box-shadow: 0 6px 25px rgba(252, 61, 33, 0.5);
+    transform: translateY(-2px);
+}
+
+#mission-button:active {
+    transform: translateY(0);
+}
+
+#pdf-button {
+    background: linear-gradient(135deg, #1E5A96 0%, #0B3D91 100%);
+    color: #FFFFFF;
+    font-size: 13px;
+}
+
+#pdf-button:hover {
+    background: linear-gradient(135deg, #2196f3 0%, #1E5A96 100%);
+    box-shadow: 0 6px 25px rgba(30, 90, 150, 0.5);
+    transform: translateY(-2px);
+}
+
+#pdf-button:active {
+    transform: translateY(0);
+}
+
+#close-dashboard {
+    background: linear-gradient(135deg, #546e7a 0%, #37474f 100%);
+    color: #FFFFFF;
+}
+
+#close-dashboard:hover {
+    background: linear-gradient(135deg, #607d8b 0%, #546e7a 100%);
+    box-shadow: 0 6px 25px rgba(84, 110, 122, 0.4);
+    transform: translateY(-2px);
+}
+
+#close-dashboard:active {
+    transform: translateY(0);
+}
+
+/* ------------------------------------------------------------------ */
+/* ESTILOS PARA SECCIONES ADICIONALES DEL DASHBOARD */
+/* ------------------------------------------------------------------ */
+
+/* Sección de Riesgo y Coste */
+#risk-info {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.risk-card,
+.cost-card,
+.info-card {
+    background: rgba(22, 33, 62, 0.5);
+    padding: 14px;
+    border-radius: 10px;
+    border-left: 4px solid;
+    transition: all 0.3s ease;
+}
+
+.risk-card {
+    border-left-color: #FC3D21;
+}
+
+.risk-card.medium-risk {
+    border-left-color: #ff9800;
+}
+
+.risk-card.low-risk {
+    border-left-color: #4caf50;
+}
+
+.cost-card {
+    border-left-color: #00d4ff;
+}
+
+.cost-card.profitable {
+    border-left-color: #4caf50;
+}
+
+.cost-card.not-profitable {
+    border-left-color: #FC3D21;
+}
+
+.info-card {
+    border-left-color: #1E5A96;
+}
+
+.risk-card:hover,
+.cost-card:hover,
+.info-card:hover {
+    background: rgba(22, 33, 62, 0.7);
+    transform: translateX(4px);
+}
+
+.risk-label,
+.cost-label,
+.info-label {
+    font-size: 11px;
+    color: #00d4ff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.risk-value,
+.cost-value,
+.info-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 4px;
+}
+
+.risk-percentage,
+.cost-status,
+.info-detail {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+.cost-card.profitable .cost-value {
+    color: #4caf50;
+}
+
+.cost-card.not-profitable .cost-value {
+    color: #FC3D21;
+}
+
+/* Sección de Métricas Globales */
+.global-metrics-desc {
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(22, 33, 62, 0.4);
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.global-metrics-desc p {
+    margin: 6px 0;
+    line-height: 1.5;
+}
+
+.global-metrics-desc strong {
+    color: #00d4ff;
+    font-weight: 600;
+}
+
+/* Canvas de gráficos */
+#globalDonut,
+#impactChart {
+    display: block;
+    margin: 15px auto;
+    background: rgba(22, 33, 62, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+}
+
+/* Sección de Propuesta de Servicios */
+#service-proposal {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.service-tier {
+    background: rgba(22, 33, 62, 0.5);
+    border-radius: 10px;
+    padding: 16px;
+    border: 2px solid;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.basic-tier {
+    border-color: rgba(0, 212, 255, 0.3);
+}
+
+.premium-tier {
+    border-color: #ffd700;
+    background: linear-gradient(135deg, rgba(11, 61, 145, 0.6) 0%, rgba(22, 33, 62, 0.6) 100%);
+}
+
+.service-tier:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+}
+
+.premium-tier:hover {
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+}
+
+.tier-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.tier-icon {
+    font-size: 20px;
+}
+
+.tier-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #00d4ff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tier-badge {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #0B3D91;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: auto;
+}
+
+.tier-features {
+    margin: 12px 0;
+}
+
+.feature {
+    padding: 6px 0;
+    font-size: 13px;
+    color: #FFFFFF;
+    line-height: 1.6;
+}
+
+.feature::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    background: #00d4ff;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.tier-price {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffd700;
+    text-align: center;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 212, 255, 0.3);
+}

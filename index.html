@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Desechos Espaciales (EGO) | NASA</title>
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- Librerías 3D -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/globe.gl"></script>
+
+    <!-- Librería de Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+</head>
+
+<body>
+    <div id="globeViz"></div>
+
+    <div id="filter-panel">
+        <h3>🛰️ Filtro de Objetivos</h3>
+
+        <div>
+            <label for="min-mass">Masa Mínima (kg):</label>
+            <input type="number" id="min-mass" value="0" min="0">
+        </div>
+        <div>
+            <label for="max-speed">Velocidad Máxima (sim.):</label>
+            <input type="number" id="max-speed" value="100" max="100" step="1">
+        </div>
+        <div>
+            <label for="material-type">Tipo de Material:</label>
+            <select id="material-type">
+                <option value="ALL">Cualquiera</option>
+                <option value="Aluminum">Aluminio</option>
+                <option value="Steel">Acero</option>
+                <option value="Composite">Compuesto</option>
+            </select>
+        </div>
+        <div>
+            <label for="category-type">Categoría:</label>
+            <select id="category-type">
+                <option value="ALL">Todas</option>
+                <option value="communications">Comunicaciones</option>
+                <option value="debris">Basura Espacial</option>
+                <option value="navigation">Navegación</option>
+                <option value="scientific">Científicos</option>
+                <option value="space_stations">Estaciones Espaciales</option>
+                <option value="misc">Misceláneos</option>
+            </select>
+        </div>
+        
+        <div class="filter-buttons">
+            <button id="apply-filters-button">Aplicar Filtros</button>
+            <button id="reset-filters-button">Reiniciar Filtros</button> 
+        </div>
+
+        <h4>📊 Resultados (<span id="results-count">50</span>)</h4>
+        <div id="results-list">
+            </div>
+    </div>
+    
+   <div id="dashboard">
+        <h3>🎯 Objetivo de Misión</h3>
+        <div id="status-indicator"></div>
+
+        <div class="data-row"><strong>Nombre:</strong> <span id="sat-name">N/A</span></div>
+        <div class="data-row"><strong>ID NORAD:</strong> <span id="sat-id">0</span></div>
+        <div class="data-row"><strong>Categoría:</strong> <span id="sat-category">N/A</span></div>
+        <div class="data-row"><strong>Altura (APOAPSIS):</strong> <span id="sat-alt">0 km</span></div>
+        <div class="data-row"><strong>Material:</strong> <span id="sat-material">N/A</span></div>
+        <hr>
+        <h4>📈 Métricas Visuales</h4>
+        <div class="metrics-bars">
+            <div class="metric-bar-container">
+                <div class="metric-header">
+                    <span class="metric-label">Vulnerabilidad de Reentrada</span>
+                    <span class="metric-value" id="vulnerability-percentage">0%</span>
+                </div>
+                <div class="metric-bar-bg">
+                    <div class="metric-bar-fill" id="vulnerability-bar"></div>
+                </div>
+            </div>
+            <div class="metric-bar-container">
+                <div class="metric-header">
+                    <span class="metric-label">Delta-V Estimado</span>
+                    <span class="metric-value" id="deltav-percentage">0%</span>
+                </div>
+                <div class="metric-bar-bg">
+                    <div class="metric-bar-fill" id="deltav-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container" style="width: 100%;">
+            <div class="chart-title">Comparación: Masa vs. Velocidad (Referencia)</div>
+            <canvas id="comparisonChart"></canvas>
+        </div>
+
+        <div class="data-row"><strong>Masa Estimada:</strong> <span id="sat-mass">0 kg</span></div>
+        <div class="data-row"><strong>Velocidad Orbital:</strong> <span id="sat-speed">0 km/h</span></div>
+        <div class="data-row"><strong>Período Orbital:</strong> <span id="sat-period">0 min</span></div>
+        <div class="data-row"><strong>Delta-V Requerido:</strong> <span id="sat-delta-v">0 m/s</span></div>
+        <div class="data-row"><strong>Tiempo de Decaimiento:</strong> <span id="sat-decay">0 años</span></div>
+        <hr>
+        <h3>🌍 Métricas Globales</h3>
+        <canvas id="globalDonut" width="150" height="150"></canvas>
+
+        <hr>
+        <h3>⚠️ Riesgo y Coste</h3>
+        <div id="risk-info"></div>
+
+        <hr>
+        <h3>💼 Propuesta de Servicio</h3>
+        <div id="service-proposal">
+            <div class="service-tier basic-tier">
+                <div class="tier-header">
+                    <span class="tier-icon">📊</span>
+                    <span class="tier-name">Básico</span>
+                </div>
+                <div class="tier-features">
+                    <div class="feature">✓ Análisis de riesgo</div>
+                    <div class="feature">✓ Cálculo de Delta-V</div>
+                    <div class="feature">✓ Estimación de coste</div>
+                </div>
+                <div class="tier-price">€2,500</div>
+            </div>
+            <div class="service-tier premium-tier">
+                <div class="tier-header">
+                    <span class="tier-icon">🚀</span>
+                    <span class="tier-name">Premium</span>
+                    <span class="tier-badge">Recomendado</span>
+                </div>
+                <div class="tier-features">
+                    <div class="feature">✓ Todo lo del plan Básico</div>
+                    <div class="feature">✓ Análisis predictivo avanzado</div>
+                    <div class="feature">✓ Plan de mitigación detallado</div>
+                    <div class="feature">✓ Simulación de trayectoria</div>
+                    <div class="feature">✓ Soporte 24/7</div>
+                </div>
+                <div class="tier-price">€8,900</div>
+            </div>
+        </div>
+        <button id="pdf-button">📄 Generar Informe PDF</button>
+
+        <hr>
+        <h3>🌱 Impacto Ambiental</h3>
+        <canvas id="impactChart" width="320" height="140"></canvas>
+
+        <button id="mission-button">🚀 SIMULAR MISIÓN DE RETIRADA</button>
+        <button id="close-dashboard">Cerrar Panel</button>
+    </div>
+
+    <div id="mission-popup">
+        <h3>🚀 ¡Alerta de Misión!</h3>
+        <div class="mission-info">
+            <p><strong>Objetivo ID:</strong> <span id="popup-sat-id"></span></p>
+            <p><strong>Distancia a EGO:</strong> <span id="popup-distance"></span> km</p>
+            <p><strong>Delta-V Requerido:</strong> <span id="popup-delta-v"></span> m/s</p>
+            <hr>
+            <p><strong>Rentabilidad Estimada:</strong> €<span id="popup-budget"></span></p>
+        </div>
+        <button id="close-mission-popup">Cerrar</button>
+    </div>
+
+    <script type="module" src="src/app.js"></script>
+</body>
+</html>
